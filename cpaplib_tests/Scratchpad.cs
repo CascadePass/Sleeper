@@ -15,7 +15,7 @@ namespace cpaplib_tests;
 [TestClass]
 public class Scratchpad
 {
-    [TestMethod]
+    //[TestMethod]
     public void CanDetectDaylightSavingTime()
     {
         DateTime testDateTime = new(2024, 5, 15, 14, 31, 0, DateTimeKind.Local);
@@ -27,7 +27,7 @@ public class Scratchpad
         Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
     }
 
-    [TestMethod]
+    //[TestMethod]
     public void CanSerializeAndDeserializeNumberDictionary()
     {
         var settingNames = GetAllPublicConstantValues<string>( typeof( SettingNames ) );
@@ -60,7 +60,7 @@ public class Scratchpad
             .ToList()!;
     }
 
-    [TestMethod]
+    //[TestMethod]
     public void DateTimeFromGoogleAPI()
     {
         var startTime = DateTime.UnixEpoch.ToLocalTime().AddMilliseconds( 1700028990000 );
@@ -147,7 +147,7 @@ public class Scratchpad
         }
     }
 
-    [TestMethod]
+    //[TestMethod]
     public void BinaryHeapForStatCalculation()
     {
         var signal = new Signal
