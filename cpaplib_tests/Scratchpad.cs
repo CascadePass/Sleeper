@@ -18,13 +18,15 @@ public class Scratchpad
     [TestMethod]
     public void CanDetectDaylightSavingTime()
     {
-        var isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime( new DateTime( 2024, 5, 15, 14, 31, 0 ) );
-        Assert.IsTrue( isDaylightSavings );
-        
-        isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime( new DateTime( 2024, 2, 15, 14, 31, 0 ) );
-        Assert.IsFalse( isDaylightSavings );
+        DateTime testDateTime = new(2024, 5, 15, 14, 31, 0);
+        var isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
+        Assert.IsTrue( isDaylightSavings, $"Date '{testDateTime}', isDaylightSavings = {isDaylightSavings}." );
+
+        testDateTime = new DateTime(2024, 2, 15, 14, 31, 0);
+        isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
+        Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}', isDaylightSavings = {isDaylightSavings}.");
     }
-    
+
     [TestMethod]
     public void CanSerializeAndDeserializeNumberDictionary()
     {
