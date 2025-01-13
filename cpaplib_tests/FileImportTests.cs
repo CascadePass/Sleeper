@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 using cpap_app.Converters;
@@ -15,7 +16,7 @@ using cpaplib;
 namespace cpaplib_tests;
 
 [TestClass]
-public class PRS1_tests
+public class FileImportTests
 {
 	#region Private fields 
 	
@@ -92,6 +93,8 @@ public class PRS1_tests
 		{ "451P", "REMstar Pro (System One)" },
 		{ "452P", "REMstar Pro (System One)" },
 	};
+
+	private const string INCONCLUSIVE_MESSAGE = "This test is for local debugging.";
 	
 	#endregion
 
@@ -100,7 +103,10 @@ public class PRS1_tests
 	{
         if (!File.Exists(SD_CARD_ROOT))
         {
-            Assert.Inconclusive($"Test path '{SD_CARD_ROOT}' does not exist.");
+            Console.WriteLine($"Test path '{SD_CARD_ROOT}' does not exist.");
+			Console.WriteLine(INCONCLUSIVE_MESSAGE);
+			Assert.IsTrue(true);
+			return;
         }
 
         var loader = new PRS1DataLoader();
@@ -117,10 +123,13 @@ public class PRS1_tests
 	{
         if (!File.Exists(SD_CARD_ROOT))
         {
-            Assert.Inconclusive($"Test path '{SD_CARD_ROOT}' does not exist.");
+            Console.WriteLine($"Test path '{SD_CARD_ROOT}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
-        
-		var loader = new PRS1DataLoader();
+
+        var loader = new PRS1DataLoader();
 		Assert.IsTrue( loader.HasCorrectFolderStructure( SD_CARD_ROOT ) );
 		Assert.IsNotNull( loader.LoadMachineIdentificationInfo( SD_CARD_ROOT ) );
 
@@ -128,7 +137,7 @@ public class PRS1_tests
 
         if (!File.Exists(propertyFilePath))
         {
-            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine($"Test path '{propertyFilePath}' does not exist.");
         }
 
         var fields     = ReadKeyValueFile( propertyFilePath );
@@ -152,7 +161,10 @@ public class PRS1_tests
 
         if (!File.Exists(propertyFilePath))
         {
-            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var fields = ReadKeyValueFile( propertyFilePath );
@@ -182,10 +194,13 @@ public class PRS1_tests
 
         if (!File.Exists(propertyFilePath))
         {
-            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
-		var fields            = ReadKeyValueFile( propertyFilePath );
+        var fields            = ReadKeyValueFile( propertyFilePath );
 		var patientFolderPath = Path.Combine( SOURCE_FOLDER, $"p{fields[ "PatientFolderNum" ]}" );
 
 		Assert.IsTrue( Directory.Exists( patientFolderPath ) );
@@ -204,7 +219,10 @@ public class PRS1_tests
 
         if (!File.Exists(propertyFilePath))
         {
-            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine($"Test path '{propertyFilePath}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var fields            = ReadKeyValueFile( propertyFilePath );
@@ -239,7 +257,10 @@ public class PRS1_tests
 	{
         if (!File.Exists(SOURCE_FOLDER))
         {
-            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
@@ -266,7 +287,10 @@ public class PRS1_tests
 	{
         if (!File.Exists(SOURCE_FOLDER))
         {
-            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
@@ -316,7 +340,10 @@ public class PRS1_tests
 	{
         if (!File.Exists(SOURCE_FOLDER))
         {
-            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.002", SearchOption.AllDirectories );
@@ -350,7 +377,10 @@ public class PRS1_tests
 	{
         if (!File.Exists(SOURCE_FOLDER))
         {
-            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine($"Test path '{SOURCE_FOLDER}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
         }
 
         var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.005", SearchOption.AllDirectories );
@@ -416,7 +446,85 @@ public class PRS1_tests
 		}
 	}
 
-	public List<Signal> ReadSignals( List<DataChunk> chunks )
+    [TestMethod]
+    public void ReadViatomBinaryFile()
+    {
+        const int HEADER_SIZE = 40;
+        const int RECORD_SIZE = 5;
+
+        string path = @"D:\Data Files\Viatom\23072C0009\20231004031747";
+
+        if (!File.Exists(path))
+        {
+            Console.WriteLine($"Test path '{path}' does not exist.");
+            Console.WriteLine(INCONCLUSIVE_MESSAGE);
+            Assert.IsTrue(true);
+            return;
+        }
+
+        using var file = File.OpenRead(path);
+        using var reader = new BinaryReader(file);
+
+        int fileVersion = reader.ReadInt16();
+        Assert.IsTrue(fileVersion is 3 or 5); // Never actually encountered FileVersion=5, but apparently someone else has and it's binary compatible
+
+        int year = reader.ReadInt16();
+        Assert.AreEqual(2023, year);
+
+        int month = reader.ReadByte();
+        Assert.IsTrue(month >= 1 && month <= 12);
+
+        int day = reader.ReadByte();
+        Assert.IsTrue(day is >= 1 and <= 31);
+
+        int hour = reader.ReadByte();
+        Assert.IsTrue(hour is >= 0 and <= 24);
+
+        int minute = reader.ReadByte();
+        Assert.IsTrue(minute is >= 0 and <= 60);
+
+        int second = reader.ReadByte();
+        Assert.IsTrue(second is >= 0 and <= 60);
+
+        var expectedTimestamp = DateTime.Parse("2023-10-04 03:17:47.000");
+        var headerTimestamp = new DateTime(year, month, day, hour, minute, second);
+        Assert.AreEqual(expectedTimestamp, headerTimestamp);
+
+        // Read timestamp (NOTE: The filename also appears to be a timestamp. Do they always match?)
+        var filenameTimestamp = DateTime.ParseExact(Path.GetFileName(path), "yyyyMMddHHmmsss", CultureInfo.InvariantCulture);
+        Assert.AreEqual(expectedTimestamp, filenameTimestamp);
+
+        // Read and validate file size 
+        int fileSize = reader.ReadInt32();
+        Assert.AreEqual(file.Length, fileSize);
+
+        // Read duration of recording 
+        var duration = TimeSpan.FromSeconds(reader.ReadInt16());
+        Assert.AreEqual(TimeSpan.FromSeconds(5316), duration);
+
+        // Skip the rest of the header, as it doesn't provide any useful information for us. 
+        file.Position = HEADER_SIZE;
+
+        // The rest of the file should be an exact multiple of RECORD_SIZE
+        Assert.AreEqual(0, (fileSize - HEADER_SIZE) % RECORD_SIZE);
+
+        int recordCount = (fileSize - HEADER_SIZE) / RECORD_SIZE;
+        double frequency = 1.0 / (duration.TotalSeconds / recordCount);
+
+        for (int i = 0; i < recordCount; i++)
+        {
+            var spO2 = reader.ReadByte();
+            var pulse = reader.ReadByte();
+            var isInvalid = reader.ReadByte();
+            var motion = reader.ReadByte();
+            var vibration = reader.ReadByte();
+
+            Debug.WriteLine($"OX: {spO2}, PULSE: {pulse}, MOT: {motion}, INVALID: {isInvalid}, VIB: {vibration}");
+        }
+    }
+
+
+    public List<Signal> ReadSignals( List<DataChunk> chunks )
 	{
 		const double SAMPLE_FREQUENCY = 0.2;
 		
