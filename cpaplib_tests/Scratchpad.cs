@@ -19,11 +19,11 @@ public class Scratchpad
     public void CanDetectDaylightSavingTime()
     {
         DateTime testDateTime = new(2024, 5, 15, 14, 31, 0, DateTimeKind.Local);
-        var isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
+        var isDaylightSavings = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
         Assert.IsTrue( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}." );
 
         testDateTime = new DateTime(2024, 2, 15, 14, 31, 0, DateTimeKind.Local);
-        isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
+        isDaylightSavings = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
         Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
     }
 
