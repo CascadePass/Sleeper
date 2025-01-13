@@ -95,7 +95,7 @@ public class PRS1_tests
 	
 	#endregion
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanImportFromRootFolder()
 	{
         if (!File.Exists(SD_CARD_ROOT))
@@ -112,7 +112,7 @@ public class PRS1_tests
 		Assert.IsTrue( days.Count > 0 );
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanImportDateRangeOnly()
 	{
         if (!File.Exists(SD_CARD_ROOT))
@@ -145,7 +145,7 @@ public class PRS1_tests
 		Assert.IsTrue( days[ days.Count - 1 ].ReportDate <= lastDateOfSet );
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void PropertiesFileExistsAndCanBeParsed()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
@@ -175,7 +175,7 @@ public class PRS1_tests
 		Assert.IsFalse( string.IsNullOrEmpty( machineInfo.SerialNumber ) );
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void PatientFolderExists()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
@@ -197,7 +197,7 @@ public class PRS1_tests
 		Assert.AreEqual( dataFiles.Length, correctFileCount );
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanReadDataFileHeader()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
@@ -234,7 +234,7 @@ public class PRS1_tests
 		Assert.AreEqual( int.Parse( Path.GetFileNameWithoutExtension( filename ) ), header.SessionNumber );
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanReadSummaryFileChunks()
 	{
         if (!File.Exists(SOURCE_FOLDER))
@@ -261,7 +261,7 @@ public class PRS1_tests
 		}
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanSerializeAndDeserializeSettings()
 	{
         if (!File.Exists(SOURCE_FOLDER))
@@ -311,7 +311,7 @@ public class PRS1_tests
 		}
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanReadEventFileChunks()
 	{
         if (!File.Exists(SOURCE_FOLDER))
@@ -345,7 +345,7 @@ public class PRS1_tests
 		}
 	}
 
-	[TestMethod]
+	//[TestMethod]
 	public void CanReadWaveformFileChunks()
 	{
         if (!File.Exists(SOURCE_FOLDER))

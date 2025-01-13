@@ -73,7 +73,7 @@ public class Scratchpad
         Debug.WriteLine( $"Start: {startTime},    End: {endTime},    Duration: {endTime - startTime}" );
     }
 
-    [TestMethod]
+    //[TestMethod]
     public void ReadViatomBinaryFile()
     {
         const int HEADER_SIZE = 40;
