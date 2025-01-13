@@ -20,11 +20,11 @@ public class Scratchpad
     {
         DateTime testDateTime = new(2024, 5, 15, 14, 31, 0, DateTimeKind.Local);
         var isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
-        Assert.IsTrue( isDaylightSavings, $"Date '{testDateTime}', isDaylightSavings = {isDaylightSavings}." );
+        Assert.IsTrue( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}." );
 
         testDateTime = new DateTime(2024, 2, 15, 14, 31, 0, DateTimeKind.Local);
         isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime(testDateTime);
-        Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}', isDaylightSavings = {isDaylightSavings}.");
+        Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
     }
 
     [TestMethod]
