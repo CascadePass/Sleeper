@@ -18,13 +18,15 @@ public class Scratchpad
     [TestMethod]
     public void CanDetectDaylightSavingTime()
     {
-        var isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime( new DateTime( 2024, 5, 15, 14, 31, 0 ) );
-        Assert.IsTrue( isDaylightSavings );
-        
-        isDaylightSavings = TimeZoneInfo.Local.IsDaylightSavingTime( new DateTime( 2024, 2, 15, 14, 31, 0 ) );
-        Assert.IsFalse( isDaylightSavings );
+        DateTime testDateTime = new(2024, 5, 15, 14, 31, 0, DateTimeKind.Local);
+        var isDaylightSavings = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
+        Assert.IsTrue( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}." );
+
+        testDateTime = new DateTime(2024, 2, 15, 14, 31, 0, DateTimeKind.Local);
+        isDaylightSavings = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
+        Assert.IsFalse( isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
     }
-    
+
     [TestMethod]
     public void CanSerializeAndDeserializeNumberDictionary()
     {
@@ -79,7 +81,10 @@ public class Scratchpad
 
         string path = @"D:\Data Files\Viatom\23072C0009\20231004031747";
 
-        Assert.IsTrue( File.Exists( path ) );
+        if (!File.Exists( path ))
+        {
+            Assert.Inconclusive($"Test path '{path}' does not exist.");
+        }
 
         using var file   = File.OpenRead( path );
         using var reader = new BinaryReader( file );
