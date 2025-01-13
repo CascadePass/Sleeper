@@ -79,7 +79,10 @@ public class Scratchpad
 
         string path = @"D:\Data Files\Viatom\23072C0009\20231004031747";
 
-        Assert.IsTrue( File.Exists( path ) );
+        if (!File.Exists( path ))
+        {
+            Assert.Inconclusive($"Test path '{path}' does not exist.");
+        }
 
         using var file   = File.OpenRead( path );
         using var reader = new BinaryReader( file );

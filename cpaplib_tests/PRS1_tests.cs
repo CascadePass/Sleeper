@@ -98,7 +98,12 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanImportFromRootFolder()
 	{
-		var loader = new PRS1DataLoader();
+        if (!File.Exists(SD_CARD_ROOT))
+        {
+            Assert.Inconclusive($"Test path '{SD_CARD_ROOT}' does not exist.");
+        }
+
+        var loader = new PRS1DataLoader();
 		Assert.IsTrue( loader.HasCorrectFolderStructure( SD_CARD_ROOT ) );
 		Assert.IsNotNull( loader.LoadMachineIdentificationInfo( SD_CARD_ROOT ) );
 		
@@ -110,14 +115,23 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanImportDateRangeOnly()
 	{
+        if (!File.Exists(SD_CARD_ROOT))
+        {
+            Assert.Inconclusive($"Test path '{SD_CARD_ROOT}' does not exist.");
+        }
+        
 		var loader = new PRS1DataLoader();
 		Assert.IsTrue( loader.HasCorrectFolderStructure( SD_CARD_ROOT ) );
 		Assert.IsNotNull( loader.LoadMachineIdentificationInfo( SD_CARD_ROOT ) );
 
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
-		Assert.IsTrue( File.Exists( propertyFilePath ) );
 
-		var fields     = ReadKeyValueFile( propertyFilePath );
+        if (!File.Exists(propertyFilePath))
+        {
+            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+        }
+
+        var fields     = ReadKeyValueFile( propertyFilePath );
 		var firstDate  = DateTime.UnixEpoch.AddSeconds( int.Parse( fields[ "FirstDate" ] ) ).ToLocalTime().Date;
 		var lastDate   = DateTime.UnixEpoch.AddSeconds( int.Parse( fields[ "LastDate" ] ) ).ToLocalTime().Date;
 		
@@ -135,9 +149,13 @@ public class PRS1_tests
 	public void PropertiesFileExistsAndCanBeParsed()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
-		Assert.IsTrue( File.Exists( propertyFilePath ) );
 
-		var fields = ReadKeyValueFile( propertyFilePath );
+        if (!File.Exists(propertyFilePath))
+        {
+            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+        }
+
+        var fields = ReadKeyValueFile( propertyFilePath );
 
 		Assert.AreEqual( fields[ "SerialNumber" ],     "P1192913945CE" );
 		Assert.AreEqual( fields[ "ModelNumber" ],      "560P" );
@@ -161,7 +179,11 @@ public class PRS1_tests
 	public void PatientFolderExists()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
-		Assert.IsTrue( File.Exists( propertyFilePath ) );
+
+        if (!File.Exists(propertyFilePath))
+        {
+            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+        }
 
 		var fields            = ReadKeyValueFile( propertyFilePath );
 		var patientFolderPath = Path.Combine( SOURCE_FOLDER, $"p{fields[ "PatientFolderNum" ]}" );
@@ -179,9 +201,13 @@ public class PRS1_tests
 	public void CanReadDataFileHeader()
 	{
 		var propertyFilePath = Path.Combine( SOURCE_FOLDER, "Properties.txt" );
-		Assert.IsTrue( File.Exists( propertyFilePath ) );
 
-		var fields            = ReadKeyValueFile( propertyFilePath );
+        if (!File.Exists(propertyFilePath))
+        {
+            Assert.Inconclusive($"Test path '{propertyFilePath}' does not exist.");
+        }
+
+        var fields            = ReadKeyValueFile( propertyFilePath );
 		var patientFolderPath = Path.Combine( SOURCE_FOLDER, $"p{fields[ "PatientFolderNum" ]}" );
 		var dataFiles         = Directory.GetFiles( patientFolderPath, "*.00?" );
 
@@ -211,7 +237,12 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanReadSummaryFileChunks()
 	{
-		var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
+        if (!File.Exists(SOURCE_FOLDER))
+        {
+            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+        }
+
+        var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
 
 		foreach( var filename in dataFiles )
 		{
@@ -233,7 +264,12 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanSerializeAndDeserializeSettings()
 	{
-		var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
+        if (!File.Exists(SOURCE_FOLDER))
+        {
+            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+        }
+
+        var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.001", SearchOption.AllDirectories );
 
 		foreach( var filename in dataFiles )
 		{
@@ -278,7 +314,12 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanReadEventFileChunks()
 	{
-		var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.002", SearchOption.AllDirectories );
+        if (!File.Exists(SOURCE_FOLDER))
+        {
+            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+        }
+
+        var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.002", SearchOption.AllDirectories );
 
 		foreach( var filename in dataFiles )
 		{
@@ -307,7 +348,12 @@ public class PRS1_tests
 	[TestMethod]
 	public void CanReadWaveformFileChunks()
 	{
-		var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.005", SearchOption.AllDirectories );
+        if (!File.Exists(SOURCE_FOLDER))
+        {
+            Assert.Inconclusive($"Test path '{SOURCE_FOLDER}' does not exist.");
+        }
+
+        var dataFiles = Directory.GetFiles( SOURCE_FOLDER, "*.005", SearchOption.AllDirectories );
 
 		foreach( var filename in dataFiles )
 		{
