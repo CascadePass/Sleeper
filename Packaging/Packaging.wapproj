@@ -81,7 +81,7 @@
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
   </ItemGroup>-->
 
-  <!--<Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />-->
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" PrivateAssets="all" />
