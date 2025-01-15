@@ -71,7 +71,7 @@
     
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.scale-200.png" />
@@ -79,9 +79,9 @@
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Images\StoreLogo.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
+  </ItemGroup>-->
 
-  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
+  <!--<Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />-->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" PrivateAssets="all" />
