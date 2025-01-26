@@ -1,28 +1,22 @@
-<!-- TOC -->
-* [Summary](#summary)
-* [Dependencies](#dependencies)
-* [Binary Distribution](#binary-distribution)
-* [Included Data Viewer](#included-data-viewer)
-<!-- TOC -->
-
 # Summary
 
 **Sleeper** is a cross platform desktop application designed to help people with sleep apnea understand their sleep, with the goal of improving it.
 
 # Shoulders of Giants
 
-**Sleeper** is built on **cpap-lib**, a managed (C#/.NET) library that allows client applications to read, explore, and analyze the data recorded by a CPAP machine. It can read the CPAP data stored on the SD Card and extract all of the waveform, event, and settings data into an easy to use data model that allows for detailed analysis of everything the CPAP machine is capable of recording. 
+**Sleeper** is built on **[cpap-lib](https://github.com/EEGKit/cpap-lib)**, a managed (C#/.NET) library that allows client applications to read, explore, and analyze the data recorded by a CPAP machine.
 
-Currently the only fully supported CPAP machine is the **ResMed AirSense 10**, because that is the machine I have and therefore the data files I have available to test with.  
+cpap-lib and Sleeper use **[StagPoint.EuropeanDataFormat.Net](https://github.com/StagPoint/StagPoint.EuropeanDataFormat.Net/)** to read the EDF files that contain the CPAP data.
 
-I have done some limited testing of the ResMed AirCurve 10 ASV as well, but don't have extensive sample data to test with. Other ResMed Series 10 models may be supported, and Series 11 models may also be at least partially supported. 
+# Supported Machines
 
-There is also very limited "proof of concept" support for the Philips Respironics System One model 560P, but other Philips Respironics models are almost certainly not supported. 
+Currently the only fully supported CPAP machine is the **ResMed AirSense 10**, however development is currently happening with a **ResMed AirCurve 10** and **AirCurve 11**.  There has been some (limited) testing with an **AirCurve 10 ASV**.
 
-# Dependencies
+# What's Next?
 
-This library uses [StagPoint.EuropeanDataFormat.Net](https://github.com/StagPoint/StagPoint.EuropeanDataFormat.Net/) to read the EDF files that contain the CPAP data.
+After more machines and therapy modes are supported, **Sleeper** will gain the ability to use EEG data from a **Muse S** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.
 
+# Screenshots
 
 ![DailyReportView-Light.jpg](docs%2FScreenshots%2FDailyReportView-Light.jpg)
 
