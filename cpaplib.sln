@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cpap-app", "cpap-app\cpap-a
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cpap-app.Desktop", "cpap-app\cpap-app.Desktop\cpap-app.Desktop.csproj", "{DBF196E9-B90C-4432-BF3B-7CF448CB9C43}"
 EndProject
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Packaging", "Packaging\Packaging.wapproj", "{D02D3747-9986-42D2-AC6C-066F1CE45D37}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
