@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+
 
 #if IMPORT_ASYNC
 using System.Threading.Tasks;
@@ -43,13 +45,18 @@ namespace cpaplib
         private static string[] expectedFiles = new[]
         {
             "STR.edf",
-            "Identification.tgt",
         };
 
         private static string[] expectedFolders = new[]
         {
             // "SETTINGS",
             "DATALOG",
+        };
+
+        private static Dictionary<string, int> identificationFileNames = new()
+        {
+            { "Identification.tgt", 10 },
+            { "Identification.json", 11 },
         };
 
         private static Dictionary<int, OperatingMode> s_modeMapping = new Dictionary<int, OperatingMode>()
@@ -70,17 +77,27 @@ namespace cpaplib
         private MachineIdentification _machineInfo    = new MachineIdentification();
         private CpapImportSettings    _importSettings = new CpapImportSettings();
 
-		#endregion
+        #endregion
 
-		#region Public API
+        #region Public API
 
-        public bool HasCorrectFolderStructure( string rootFolder )
+        public bool HasCorrectFolderStructure(string rootFolder)
+        {
+            return this.HasCorrectFolderStructure(rootFolder, false);
+        }
+
+        public bool HasCorrectFolderStructure( string rootFolder, bool throwIfNot )
         {
             foreach( var folder in expectedFolders )
             {
                 var directoryPath = Path.Combine( rootFolder, folder );
                 if( !Directory.Exists( directoryPath ) )
                 {
+                    if (throwIfNot)
+                    {
+                        throw new DirectoryNotFoundException($"Directory {directoryPath} does not exist");
+                    }
+
                     return false;
                 }
             }
@@ -90,49 +107,139 @@ namespace cpaplib
                 var filePath = Path.Combine( rootFolder, filename );
                 if( !File.Exists( filePath ) )
                 {
+                    if (throwIfNot)
+                    {
+                        throw new FileNotFoundException($"File {filePath} does not exist");
+                    }
+
                     return false;
                 }
+            }
+
+            foreach (var filename in identificationFileNames.Keys)
+            {
+                var filePath = Path.Combine(rootFolder, filename);
+                if (File.Exists(filePath))
+                {
+                    return true;
+                }
+            }
+
+            if (throwIfNot)
+            {
+                throw new FileNotFoundException($"Device Identificaiton File does not exist");
             }
 
             return true;
         }
 
-        public MachineIdentification LoadMachineIdentificationInfo( string rootFolder )
+        #region Get Machine Identification
+
+        public MachineIdentification LoadMachineIdentificationInfo(string rootFolder)
         {
-            var filename    = Path.Combine( rootFolder, "Identification.tgt" );
-            var machineInfo = new MachineIdentification();
-            var fields      = new Dictionary<string, string>();
-
-            using( var file = File.OpenRead( filename ) )
+            foreach (var item in identificationFileNames)
             {
-                using( var reader = new StreamReader( file ) )
+                var filename = item.Key;
+                var filePath = Path.Combine(rootFolder, filename);
+
+                if (File.Exists(filePath))
                 {
-                    while( !reader.EndOfStream )
+                    var machineVersion = item.Value;
+
+                    switch (machineVersion)
                     {
-                        var line = reader.ReadLine()?.Trim();
-                        if( string.IsNullOrEmpty( line ) || !line.StartsWith( "#", StringComparison.Ordinal ) )
-                        {
-                            continue;
-                        }
-
-                        int spaceIndex = line.IndexOf( " ", StringComparison.Ordinal );
-                        Debug.Assert( spaceIndex != -1 );
-
-                        var key   = line.Substring( 1, spaceIndex - 1 );
-                        var value = line.Substring( spaceIndex + 1 ).Trim().Replace( '_', ' ' );
-
-                        fields[ key ] = value;
+                        case 10:
+                            return LoadMachineIdentificationInfo_ResMedSeries10(rootFolder);
+                        case 11:
+                            return LoadMachineIdentificationInfo_ResMedSeries11(rootFolder);
                     }
-
-                    machineInfo.Manufacturer = MachineManufacturer.ResMed;
-                    machineInfo.ProductName  = fields[ "PNA" ];
-                    machineInfo.SerialNumber = fields[ "SRN" ];
-                    machineInfo.ModelNumber  = fields[ "PCD" ];
                 }
             }
 
+            throw new FileNotFoundException("Device Identification File does not exist");
+        }
+
+        public MachineIdentification LoadMachineIdentificationInfo_ResMedSeries10( string rootFolder )
+        {
+            var filename    = Path.Combine( rootFolder, "Identification.tgt" );
+
+            if (!File.Exists(filename))
+            {
+                return null;
+            }
+
+            using( var file = File.OpenRead( filename ) )
+            {
+                return this.GetMachineIdentificationFromStream(file);
+            }
+        }
+
+        public MachineIdentification LoadMachineIdentificationInfo_ResMedSeries11(string rootFolder)
+        {
+            var filename = Path.Combine(rootFolder, "Identification.json");
+
+            if (File.Exists(filename))
+            {
+                var rawJsonData = File.ReadAllText(filename);
+
+                return this.GetMachineIdentificationFromJson(rawJsonData);
+            }
+
+            return null;
+        }
+
+        #region Parsle ID File
+
+        public MachineIdentification GetMachineIdentificationFromJson(string json)
+        {
+            var result = JsonConvert.DeserializeObject<JsonMachineIdentificationFile>(json);
+
+            var machineInfo = new MachineIdentification
+            {
+                Manufacturer = MachineManufacturer.ResMed,
+                ProductName = result?.FlowGenerator?.IdentificationProfiles?.Product?.ProductName,
+                SerialNumber = result?.FlowGenerator?.IdentificationProfiles?.Product?.SerialNumber,
+                ModelNumber = result?.FlowGenerator?.IdentificationProfiles?.Product?.ProductCode,
+            };
+
             return machineInfo;
         }
+
+        public MachineIdentification GetMachineIdentificationFromStream(Stream stream)
+        {
+            var machineInfo = new MachineIdentification();
+            var fields = new Dictionary<string, string>();
+
+            using var reader = new StreamReader(stream);
+
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine()?.Trim();
+                if (string.IsNullOrEmpty(line) || !line.StartsWith("#", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                int spaceIndex = line.IndexOf(" ", StringComparison.Ordinal);
+                Debug.Assert(spaceIndex != -1);
+
+                var key = line.Substring(1, spaceIndex - 1);
+                var value = line.Substring(spaceIndex + 1).Trim().Replace('_', ' ');
+
+                fields[key] = value;
+            }
+
+            machineInfo.Manufacturer = MachineManufacturer.ResMed;
+            machineInfo.ProductName = fields["PNA"];
+            machineInfo.SerialNumber = fields["SRN"];
+            machineInfo.ModelNumber = fields["PCD"];
+
+            return machineInfo;
+        }
+
+        #endregion
+
+        #endregion
 
         public List<DailyReport> LoadFromFolder( string rootFolder, DateTime? minDate = null, DateTime? maxDate = null, CpapImportSettings importSettings = null )
         {
@@ -202,23 +309,7 @@ namespace cpaplib
 
         private void EnsureCorrectFolderStructure( string rootFolder )
         {
-            foreach( var folder in expectedFolders )
-            {
-                var directoryPath = Path.Combine( rootFolder, folder );
-                if( !Directory.Exists( directoryPath ) )
-                {
-                    throw new DirectoryNotFoundException( $"Directory {directoryPath} does not exist" );
-                }
-            }
-
-            foreach( var filename in expectedFiles )
-            {
-                var filePath = Path.Combine( rootFolder, filename );
-                if( !File.Exists( filePath ) )
-                {
-                    throw new FileNotFoundException( $"File {filePath} does not exist" );
-                }
-            }
+            this.HasCorrectFolderStructure(rootFolder, true);
         }
 
         private void ImportSessionsAndEvents( string rootFolder, DailyReport day )

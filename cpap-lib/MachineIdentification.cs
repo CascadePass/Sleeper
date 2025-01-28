@@ -5,7 +5,7 @@ using System.IO;
 
 namespace cpaplib
 {
-	public class MachineIdentification
+    public class MachineIdentification
 	{
 		#region Public properties
 
