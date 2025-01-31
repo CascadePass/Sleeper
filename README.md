@@ -1,8 +1,8 @@
 # Introduction
 
-**Sleep Apnea** is a common problem, affecting 1 in 7 people world wide.  The gold standard treatment for sleep apnea (SA) is CPAP and BiPAP, machines that deliver pressurized air to stent the patient's airway open.  An increasing number of patients are diagnosed through home tests, who usually do not go on to do a titration study.  It can be difficult to know how to set a PAP machine up, especially what pressures to use.
+**Sleep Apnea** is a common problem, affecting 1 in 7 people world wide.  The gold standard treatment for sleep apnea (SA) is CPAP and BiPAP, machines that deliver pressurized air to hold the airway open.  It can be difficult to know how to set a PAP machine up, especially what pressures to use.  An increasing number of patients are diagnosed through home tests, who usually do not go on to do a titration study.
 
-# Summary
+# Project Summary
 
 **Sleeper** is a desktop application designed to help people with sleep SA understand their sleep, with the goal of improving it.  Sleeper can import the logs created by a PAP machine and draw charts to visualize what happened overnight and help users see patterns.
 
@@ -27,9 +27,9 @@ Currently the only fully supported CPAP machine is the **ResMed AirSense 10**, h
 
 After more machines and therapy modes are supported, **Sleeper** will gain the ability to use EEG data from a **Muse S** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.
 
-# Contributing
+# Contributing Code
 
-We welcome contributions from other developers!  Please create a pull request.
+We welcome contributions from other developers!  Please create fork, make a branch with your changnes, and start a pull request.  Code supplied by the community will be covered by the MIT license.
 
 # Screenshots
 
