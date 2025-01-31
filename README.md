@@ -14,7 +14,7 @@ Modern machines have auto modes that work well enough for most users, so it's be
 
 # Technology
 
-Sleeper is a desktop application written in C#, targeting .NET Core.  It uses Avalonia for the UI and [SQLite](SQLite Home Page) for the database.
+Sleeper is a desktop application written in C#, targeting .NET Core.  It uses Avalonia for the UI and [SQLite](https://www.sqlite.org/index.html) for the database.
 
 Additionally Sleeper stands on the shoulders of giants, and owes a great debt to several open source projects:
 
