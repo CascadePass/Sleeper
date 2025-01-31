@@ -1001,11 +1001,124 @@ namespace cpaplib
         {
             var settings = new MachineSettings();
 
+            OperatingMode operatingMode = GetOperatingMode(data);
+
+            settings[SettingNames.Mode] = operatingMode;
+
+            switch (operatingMode)
+            {
+                case OperatingMode.Cpap:
+                    break;
+                case OperatingMode.Apap:
+                    settings[SettingNames.MinPressure] = data["S.AS.MinPress"];
+                    settings[SettingNames.MaxPressure] = data["S.AS.MaxPress"];
+                    break;
+                case OperatingMode.Asv:
+                    settings[SettingNames.RampPressure] = data["S.AV.StartPress"];
+                    settings[SettingNames.MinPressureSupport] = data["S.AV.MinPS"];
+                    settings[SettingNames.MaxPressureSupport] = data["S.AV.MaxPS"];
+                    settings[SettingNames.EPAP] = data["S.AV.EPAP"];
+                    settings[SettingNames.EpapMin] = data["S.AA.MinEPAP"];
+                    settings[SettingNames.EpapMax] = data["S.AA.MaxEPAP"];
+                    settings[SettingNames.IpapMin] = data["S.AV.EPAP"] + data["S.AV.MinPS"];
+                    settings[SettingNames.IpapMax] = data["S.AV.EPAP"] + data["S.AV.MaxPS"];
+                    break;
+                case OperatingMode.AsvVariableEpap:
+                    settings[SettingNames.RampPressure] = data["S.AA.StartPress"];
+                    settings[SettingNames.MinPressureSupport] = data["S.AA.MinPS"];
+                    settings[SettingNames.MaxPressureSupport] = data["S.AA.MaxPS"];
+                    settings[SettingNames.EPAP] = data["S.AA.MinEPAP"];
+                    settings[SettingNames.EpapMin] = data["S.AA.MinEPAP"];
+                    settings[SettingNames.EpapMax] = data["S.AA.MaxEPAP"];
+                    settings[SettingNames.IpapMin] = data["S.AV.EPAP"] + data["S.AA.MinPS"];
+                    settings[SettingNames.IpapMax] = data["S.AV.EPAP"] + data["S.AA.MaxPS"];
+                    break;
+                case OperatingMode.Avaps:
+                    {
+                        settings[SettingNames.RampPressure] = data["S.i.StartPress"];
+                        settings[SettingNames.MinPressureSupport] = data["S.i.MinPS"];
+                        settings[SettingNames.MaxPressureSupport] = data["S.i.MaxPS"];
+                        settings[SettingNames.EpapAuto] = data["S.i.EPAPAuto"] > 0.5;
+                        settings[SettingNames.EPAP] = data["S.i.EPAP"];
+                        settings[SettingNames.EpapMin] = data["S.i.EPAP"];
+                        settings[SettingNames.EpapMax] = data["S.i.EPAP"];
+
+                        if (settings.GetValue<bool>(SettingNames.EpapAuto))
+                        {
+                            settings[SettingNames.EpapMin] = data["S.i.MinEPAP"];
+                            settings[SettingNames.EpapMax] = data["S.i.MaxEPAP"];
+
+                            settings[SettingNames.IPAP] = data["S.i.MinEPAP"] + data["S.i.MinPS"];
+                            settings[SettingNames.IpapMin] = data["S.i.MinEPAP"] + data["S.i.MinPS"];
+                            settings[SettingNames.IpapMax] = data["S.i.MaxEPAP"] + data["S.i.MaxPS"];
+                        }
+                        else
+                        {
+                            settings[SettingNames.IPAP] = data["S.i.EPAP"] + data["S.i.MinPS"];
+                            settings[SettingNames.IpapMin] = data["S.i.EPAP"] + data["S.i.MinPS"];
+                            settings[SettingNames.IpapMax] = data["S.i.EPAP"] + data["S.i.MaxPS"];
+                        }
+                        break;
+                    }
+                default:
+                    throw new NotSupportedException($"Operating Mode {operatingMode} is not yet supported");
+            }
+
+            if (data.TryGetValue("S.EPR.EPREnable", out double eprEnabledValue))
+            {
+                settings[SettingNames.EprEnabled] = eprEnabledValue >= 0.5;
+                settings[SettingNames.EprLevel] = (int)data["S.EPR.Level"];
+                settings[SettingNames.EprMode] = (EprType)(int)(data["S.EPR.EPRType"] + 1);
+                settings[SettingNames.ResponseType] = (AutoSetResponseType)(int)data["S.AS.Comfort"];
+
+                // settings[ SettingNames.RampPressure ] = data[ "S.AS.StartPress" ];
+                // settings[ SettingNames.MaxPressure ]  = data[ "S.AS.MaxPress" ];
+                // settings[ SettingNames.MinPressure ]  = data[ "S.AS.MinPress" ];
+            }
+            else
+            {
+                settings[SettingNames.EprEnabled] = false;
+            }
+
+            settings[SettingNames.Pressure] = data["S.C.Press"];
+            settings[SettingNames.RampMode] = (RampModeType)(int)data["S.RampEnable"];
+            settings[SettingNames.RampPressure] = data["S.C.StartPress"];
+            settings[SettingNames.RampTime] = data["S.RampTime"];
+
+            settings[SettingNames.SmartStart] = data["S.SmartStart"] > 0.5 ? OnOffType.On : OnOffType.Off;
+            settings[SettingNames.AntibacterialFilter] = data["S.ABFilter"] >= 0.5;
+
+            settings[SettingNames.HeatedTubePresent] = data["HeatedTube"] > 0.5;
+            settings[SettingNames.HumidifierAttached] = data["Humidifier"] > 0.5;
+            settings[SettingNames.ClimateControl] = (ClimateControlType)(int)data["S.ClimateControl"];
+            settings[SettingNames.HumidifierMode] = data["Humidifier"] > 0.5 && data["S.HumEnable"] > 0.5 ? OnOffType.On : OnOffType.Off;
+            settings[SettingNames.HumidityLevel] = data["S.HumLevel"];
+            settings[SettingNames.HeatedTubeEnabled] = data["S.TempEnable"] > 0.5;
+            settings[SettingNames.TubeTemperature] = data["S.Temp"] * 1.8 + 32; // Converted from Celsius to Fahrenheit
+
+            settings[SettingNames.MaskType] = (MaskType)(int)data["S.Mask"];
+
+            settings[SettingNames.EssentialsMode] = data["S.PtAccess"] > 0.5 ? EssentialsMode.On : EssentialsMode.Plus;
+
+            return settings;
+        }
+
+        public static OperatingMode GetOperatingMode(Dictionary<string, double> data)
+        {
+            #region Sanity Check
+
+            if (data is null)
+            {
+                return OperatingMode.UNKNOWN;
+            }
+
+            #endregion
+
             OperatingMode operatingMode = OperatingMode.UNKNOWN;
 
-            if( data.TryGetValue( "CPAP_MODE", out double legacyMode ) )
+            if (data.TryGetValue("CPAP_MODE", out double legacyMode))
             {
-                switch( (int)legacyMode )
+                switch ((int)legacyMode)
                 {
                     case 1:
                     case 2:
@@ -1021,117 +1134,24 @@ namespace cpaplib
             }
             else
             {
-                var mode = (int)data.GetValue( "Mode" );
-
-                // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
-                if( s_modeMapping.TryGetValue( mode, out OperatingMode mappedMode ) )
+                if(data.TryGetValue("Mode", out double mode))
                 {
-                    operatingMode = mappedMode;
-                }
-                else
-                {
-                    operatingMode = OperatingMode.Cpap;
-                }
-            }
+                    //operatingMode = (OperatingMode)mode;
+                    //var mode = (int)data.GetValue("Mode");
 
-            settings[ SettingNames.Mode ] = operatingMode;
-
-            switch( operatingMode )
-            {
-                case OperatingMode.Cpap:
-                    break;
-                case OperatingMode.Apap:
-                    settings[ SettingNames.MinPressure ] = data[ "S.AS.MinPress" ];
-                    settings[ SettingNames.MaxPressure ] = data[ "S.AS.MaxPress" ];
-                    break;
-                case OperatingMode.Asv:
-                    settings[ SettingNames.RampPressure ]       = data[ "S.AV.StartPress" ];
-                    settings[ SettingNames.MinPressureSupport ] = data[ "S.AV.MinPS" ];
-                    settings[ SettingNames.MaxPressureSupport ] = data[ "S.AV.MaxPS" ];
-                    settings[ SettingNames.EPAP ]               = data[ "S.AV.EPAP" ];
-                    settings[ SettingNames.EpapMin ]            = data[ "S.AA.MinEPAP" ];
-                    settings[ SettingNames.EpapMax ]            = data[ "S.AA.MaxEPAP" ];
-                    settings[ SettingNames.IpapMin ]            = data[ "S.AV.EPAP" ] + data[ "S.AV.MinPS" ];
-                    settings[ SettingNames.IpapMax ]            = data[ "S.AV.EPAP" ] + data[ "S.AV.MaxPS" ];
-                    break;
-                case OperatingMode.AsvVariableEpap:
-                    settings[ SettingNames.RampPressure ]       = data[ "S.AA.StartPress" ];
-                    settings[ SettingNames.MinPressureSupport ] = data[ "S.AA.MinPS" ];
-                    settings[ SettingNames.MaxPressureSupport ] = data[ "S.AA.MaxPS" ];
-                    settings[ SettingNames.EPAP ]               = data[ "S.AA.MinEPAP" ];
-                    settings[ SettingNames.EpapMin ]            = data[ "S.AA.MinEPAP" ];
-                    settings[ SettingNames.EpapMax ]            = data[ "S.AA.MaxEPAP" ];
-                    settings[ SettingNames.IpapMin ]            = data[ "S.AV.EPAP" ] + data[ "S.AA.MinPS" ];
-                    settings[ SettingNames.IpapMax ]            = data[ "S.AV.EPAP" ] + data[ "S.AA.MaxPS" ];
-                    break;
-                case OperatingMode.Avaps:
-                {
-                    settings[ SettingNames.RampPressure ]       = data[ "S.i.StartPress" ];
-                    settings[ SettingNames.MinPressureSupport ] = data[ "S.i.MinPS" ];
-                    settings[ SettingNames.MaxPressureSupport ] = data[ "S.i.MaxPS" ];
-                    settings[ SettingNames.EpapAuto ]           = data[ "S.i.EPAPAuto" ] > 0.5;
-                    settings[ SettingNames.EPAP ]               = data[ "S.i.EPAP" ];
-                    settings[ SettingNames.EpapMin ]            = data[ "S.i.EPAP" ];
-                    settings[ SettingNames.EpapMax ]            = data[ "S.i.EPAP" ];
-
-                    if( settings.GetValue<bool>( SettingNames.EpapAuto ) )
+                    // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+                    if (s_modeMapping.TryGetValue((int)mode, out OperatingMode mappedMode))
                     {
-                        settings[ SettingNames.EpapMin ] = data[ "S.i.MinEPAP" ];
-                        settings[ SettingNames.EpapMax ] = data[ "S.i.MaxEPAP" ];
-
-                        settings[ SettingNames.IPAP ]    = data[ "S.i.MinEPAP" ] + data[ "S.i.MinPS" ];
-                        settings[ SettingNames.IpapMin ] = data[ "S.i.MinEPAP" ] + data[ "S.i.MinPS" ];
-                        settings[ SettingNames.IpapMax ] = data[ "S.i.MaxEPAP" ] + data[ "S.i.MaxPS" ];
+                        operatingMode = mappedMode;
                     }
                     else
                     {
-                        settings[ SettingNames.IPAP ]    = data[ "S.i.EPAP" ] + data[ "S.i.MinPS" ];
-                        settings[ SettingNames.IpapMin ] = data[ "S.i.EPAP" ] + data[ "S.i.MinPS" ];
-                        settings[ SettingNames.IpapMax ] = data[ "S.i.EPAP" ] + data[ "S.i.MaxPS" ];
+                        operatingMode = OperatingMode.Cpap;
                     }
-                    break;
                 }
-                default:
-                    throw new NotSupportedException( $"Operating Mode {operatingMode} is not yet supported" );
             }
 
-            if( data.TryGetValue( "S.EPR.EPREnable", out double eprEnabledValue ) )
-            {
-                settings[ SettingNames.EprEnabled ]   = eprEnabledValue >= 0.5;
-                settings[ SettingNames.EprLevel ]     = (int)data[ "S.EPR.Level" ];
-                settings[ SettingNames.EprMode ]      = (EprType)(int)(data[ "S.EPR.EPRType" ] + 1);
-                settings[ SettingNames.ResponseType ] = (AutoSetResponseType)(int)data[ "S.AS.Comfort" ];
-
-                // settings[ SettingNames.RampPressure ] = data[ "S.AS.StartPress" ];
-                // settings[ SettingNames.MaxPressure ]  = data[ "S.AS.MaxPress" ];
-                // settings[ SettingNames.MinPressure ]  = data[ "S.AS.MinPress" ];
-            }
-            else
-            {
-                settings[ SettingNames.EprEnabled ] = false;
-            }
-
-            settings[ SettingNames.Pressure ]     = data[ "S.C.Press" ];
-            settings[ SettingNames.RampMode ]     = (RampModeType)(int)data[ "S.RampEnable" ];
-            settings[ SettingNames.RampPressure ] = data[ "S.C.StartPress" ];
-            settings[ SettingNames.RampTime ]     = data[ "S.RampTime" ];
-
-            settings[ SettingNames.SmartStart ]          = data[ "S.SmartStart" ] > 0.5 ? OnOffType.On : OnOffType.Off;
-            settings[ SettingNames.AntibacterialFilter ] = data[ "S.ABFilter" ] >= 0.5;
-
-            settings[ SettingNames.HeatedTubePresent ]  = data[ "HeatedTube" ] > 0.5;
-            settings[ SettingNames.HumidifierAttached ] = data[ "Humidifier" ] > 0.5;
-            settings[ SettingNames.ClimateControl ]     = (ClimateControlType)(int)data[ "S.ClimateControl" ];
-            settings[ SettingNames.HumidifierMode ]     = data[ "Humidifier" ] > 0.5 && data[ "S.HumEnable" ] > 0.5 ? OnOffType.On : OnOffType.Off;
-            settings[ SettingNames.HumidityLevel ]      = data[ "S.HumLevel" ];
-            settings[ SettingNames.HeatedTubeEnabled ]  = data[ "S.TempEnable" ] > 0.5;
-            settings[ SettingNames.TubeTemperature ]    = data[ "S.Temp" ] * 1.8 + 32; // Converted from Celsius to Fahrenheit
-
-            settings[ SettingNames.MaskType ] = (MaskType)(int)data[ "S.Mask" ];
-
-            settings[ SettingNames.EssentialsMode ] = data[ "S.PtAccess" ] > 0.5 ? EssentialsMode.On : EssentialsMode.Plus;
-
-            return settings;
+            return operatingMode;
         }
 
         private static void FilterDaysByDate( List<DailyReport> days, DateTime minDate, DateTime maxDate )
