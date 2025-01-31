@@ -6,7 +6,7 @@ Modern machines have auto modes that work well enough for most users, so it's be
 
 # Project Summary
 
-**Sleeper** is designed to help people with sleep SA understand and improve their sleep.  Sleeper can import the logs created by a PAP machine and draw charts to visualize what happened overnight and help users see patterns.  It's designed to help new PAP users answer questions like:
+**Sleeper** is designed to help people with SA understand and improve their sleep.  Sleeper can import the logs created by a PAP machine and draw charts to visualize what happened overnight and help users see patterns.  It's designed to help new PAP users answer questions like:
 
 * Should I run my machine in auto (APAP) or manual (CPAP) mode?
 * What pressure(s) should I use?
@@ -14,7 +14,7 @@ Modern machines have auto modes that work well enough for most users, so it's be
 
 # Technology
 
-Sleeper is a desktop application written in C#, targeting .NET Core.  It uses Avalonia for the UI and [SQLite](https://www.sqlite.org/index.html) for the database.
+Sleeper is a desktop application written in C#, targeting .NET Core v9.  It uses **[Avalonia](Avalonia)** for the UI and **[SQLite](https://www.sqlite.org/index.html)** for the database.  There are [unit tests](https://github.com/CascadePass/Sleeper/tree/master/cpaplib_tests), the Sleeper project uses GitHub Actions for continuous integration (CI).
 
 Additionally Sleeper stands on the shoulders of giants, and owes a great debt to several open source projects:
 
@@ -22,8 +22,6 @@ Additionally Sleeper stands on the shoulders of giants, and owes a great debt to
 * **[cpap-lib](https://github.com/EEGKit/cpap-lib)** allows client applications to read, explore, and analyze the data recorded by a CPAP machine.
 * **[Scottplot](https://scottplot.net/)** for charting.
 * **[Newtonsoft](https://www.newtonsoft.com/json)** for parsing JSON.
-
-There are [unit tests](https://github.com/CascadePass/Sleeper/tree/master/cpaplib_tests), the Sleeper project uses GitHub Actions for continuous integration (CI).
 
 # Supported Machines
 
