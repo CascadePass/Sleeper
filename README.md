@@ -37,7 +37,7 @@ After more machines and therapy modes are supported, **Sleeper** will gain the a
 
 We welcome contributions from other developers!  Please create a fork, make a branch with your changes, and start a pull request.  Code supplied by the community will be covered by the MIT license.
 
-Additionally, you can submit feature requests, ideas and describe your experience as a user in the [discussions]( CascadePass/Sleeper · Discussions · GitHub).
+Additionally, you can submit feature requests, ideas and describe your experience as a user in the [discussions](https://github.com/CascadePass/Sleeper/discussions).
 
 # Screenshots
 
