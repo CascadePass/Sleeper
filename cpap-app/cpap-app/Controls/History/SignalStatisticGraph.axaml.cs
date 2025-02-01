@@ -187,7 +187,12 @@ public partial class SignalStatisticGraph : HistoryGraphBase
 			Units      = Units,
 		};
 	}
-	
-	#endregion 
+
+    public override string ToString()
+    {
+		return Title;
+    }
+
+    #endregion
 }
 

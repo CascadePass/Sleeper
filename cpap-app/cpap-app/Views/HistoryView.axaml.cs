@@ -109,9 +109,7 @@ public partial class HistoryView : UserControl, IPrintableView
 			}
 
 			var signalDefaults = signalNamesAndUnits.FirstOrDefault( x => x.Name == config.SignalName );
-			Debug.Assert( signalDefaults != null, nameof( signalDefaults ) + " != null" );
-
-			var units = signalDefaults.UnitOfMeasurement;
+			var units = signalDefaults?.UnitOfMeasurement;
 
 			double? minValue = config.AxisMinValue;
 			double? maxValue = config.AxisMaxValue;
@@ -119,9 +117,13 @@ public partial class HistoryView : UserControl, IPrintableView
 			switch( config.ScalingMode )
 			{
 				case AxisScalingMode.Defaults:
-					minValue = signalDefaults.MinValue;
-					maxValue = signalDefaults.MaxValue;
-					break;
+					if (signalDefaults != null)
+					{
+                        minValue = signalDefaults.MinValue;
+                        maxValue = signalDefaults.MaxValue;
+                    }
+                    break;
+
 				case AxisScalingMode.AutoFit:
 					minValue = null;
 					maxValue = null;
@@ -258,7 +260,16 @@ public partial class HistoryView : UserControl, IPrintableView
 		public string UnitOfMeasurement { get; set; } = string.Empty;
 		public double MinValue          { get; set; }
 		public double MaxValue          { get; set; }
-	}
+
+		/// <summary>
+		/// For debugging purposes.
+		/// </summary>
+		/// <returns>A string representation of the data.</returns>
+        public override string ToString()
+        {
+			return $"{this.Name}, {this.MinValue} - {this.MaxValue} {this.UnitOfMeasurement}";
+        }
+    }
 
 	#endregion
 
