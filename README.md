@@ -23,13 +23,25 @@ Additionally Sleeper stands on the shoulders of giants, and owes a great debt to
 * **[Scottplot](https://scottplot.net/)** for charting.
 * **[Newtonsoft](https://www.newtonsoft.com/json)** for parsing JSON.
 
-# Supported Machines
+# Supported PAP Machines
 
-Currently the only fully supported CPAP machine is the **ResMed AirSense 10**, however development is currently happening with a **ResMed AirCurve 10** and **AirCurve 11**.  There has been some (limited) testing with an **AirCurve 10 ASV**.
+Sleeper is able to read data from the following ResMed machines:
+
+* AirSense 10
+* AirCurve 10
+* AirSense 11
+
+It's been tested with the following therapy modes:
+
+* CPAP
+* APAP
+* BiLevel aka BiPAP
+
+There has been some (limited) testing with an **AirCurve 10 ASV**.
 
 # What's Next?
 
-After more machines and therapy modes are supported, **Sleeper** will gain the ability to use EEG data from a **Muse S** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.
+After some bugs are fixed, **Sleeper** will gain the ability to use EEG data from a **[Muse S](https://choosemuse.com/pages/muse-s)** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.
 
 # Contributing Code
 
