@@ -1001,6 +1001,21 @@ namespace cpaplib
         {
             var settings = new MachineSettings();
 
+            /*
+            Debug.WriteLine("----------------------------------------------------------------------------");
+            Debug.WriteLine("----------------------------------------------------------------------------");
+            Debug.WriteLine("----------------------------------------------------------------------------");
+
+            foreach (var key in data.Keys)
+            {
+                System.Diagnostics.Debug.WriteLine($"{key} = {data[key]}");
+            }
+
+            Debug.WriteLine("----------------------------------------------------------------------------");
+            Debug.WriteLine("----------------------------------------------------------------------------");
+            Debug.WriteLine("----------------------------------------------------------------------------");
+            */
+
             OperatingMode operatingMode = GetOperatingMode(data);
 
             settings[SettingNames.Mode] = operatingMode;
@@ -1010,8 +1025,8 @@ namespace cpaplib
                 case OperatingMode.Cpap:
                     break;
                 case OperatingMode.Apap:
-                    settings[SettingNames.MinPressure] = data["S.AS.MinPress"];
-                    settings[SettingNames.MaxPressure] = data["S.AS.MaxPress"];
+                    settings[SettingNames.MinPressure] = data["S.A.MinPress"]; //data["S.AS.MinPress"];
+                    settings[SettingNames.MaxPressure] = data["S.A.MaxPress"]; //data["S.AS.MaxPress"];
                     break;
                 case OperatingMode.Asv:
                     settings[SettingNames.RampPressure] = data["S.AV.StartPress"];
@@ -1022,6 +1037,16 @@ namespace cpaplib
                     settings[SettingNames.EpapMax] = data["S.AA.MaxEPAP"];
                     settings[SettingNames.IpapMin] = data["S.AV.EPAP"] + data["S.AV.MinPS"];
                     settings[SettingNames.IpapMax] = data["S.AV.EPAP"] + data["S.AV.MaxPS"];
+                    break;
+                case OperatingMode.BilevelAutoFixedPS:
+                    settings[SettingNames.IPAP] = data["TgtIPAP.50"]; // ???
+                    settings[SettingNames.EPAP] = data["TgtEPAP.50"]; // ???
+                    settings[SettingNames.Pressure] = data["S.C.Press"]; // ???
+                    break;
+                case OperatingMode.BilevelFixed:
+                    settings[SettingNames.IPAP] = data["TgtIPAP.50"]; // ???
+                    settings[SettingNames.EPAP] = data["TgtEPAP.50"]; // ???
+                    settings[SettingNames.Pressure] = data["S.C.Press"]; // ???
                     break;
                 case OperatingMode.AsvVariableEpap:
                     settings[SettingNames.RampPressure] = data["S.AA.StartPress"];
@@ -1069,7 +1094,17 @@ namespace cpaplib
                 settings[SettingNames.EprEnabled] = eprEnabledValue >= 0.5;
                 settings[SettingNames.EprLevel] = (int)data["S.EPR.Level"];
                 settings[SettingNames.EprMode] = (EprType)(int)(data["S.EPR.EPRType"] + 1);
-                settings[SettingNames.ResponseType] = (AutoSetResponseType)(int)data["S.AS.Comfort"];
+
+                if(data.ContainsKey("S.EPR.EPRType"))
+                {
+                    settings[SettingNames.ResponseType] = (AutoSetResponseType)(int)data["S.EPR.EPRType"];
+                }
+
+                if (data.ContainsKey("S.AS.Comfort"))
+                {
+                    settings[SettingNames.ResponseType] = (AutoSetResponseType)(int)data["S.AS.Comfort"];
+                }
+
 
                 // settings[ SettingNames.RampPressure ] = data[ "S.AS.StartPress" ];
                 // settings[ SettingNames.MaxPressure ]  = data[ "S.AS.MaxPress" ];
