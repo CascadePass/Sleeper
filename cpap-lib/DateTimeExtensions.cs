@@ -11,7 +11,7 @@ namespace cpaplib
         }
     }
 
-    internal static class DateUtil
+    public static class DateUtil
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static DateTime Min( DateTime a, DateTime b )
@@ -23,6 +23,12 @@ namespace cpaplib
         public static DateTime Max( DateTime a, DateTime b )
         {
             return (a > b) ? a : b;
+        }
+
+        public static bool IsDaylightSavingTime(DateTime dateTime)
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.Local;
+            return timeZoneInfo.IsDaylightSavingTime(dateTime);
         }
     }
 
