@@ -27,7 +27,9 @@ namespace cpaplib
 
         public static bool IsDaylightSavingTime(DateTime dateTime)
         {
-            TimeZoneInfo timeZoneInfo = TimeZoneInfo.Local;
+            //TODO: Use the TZ of the PAP machine
+
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             return timeZoneInfo.IsDaylightSavingTime(dateTime);
         }
     }

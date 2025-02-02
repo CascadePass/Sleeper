@@ -16,11 +16,11 @@ namespace cpaplib_tests
         public void CanDetectDaylightSavingTime()
         {
             DateTime testDateTime = new(2024, 5, 15, 14, 31, 0, DateTimeKind.Local);
-            var isDaylightSavings = DateUtil.IsDaylightSavingTime(testDateTime); //TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
+            var isDaylightSavings = DateUtil.IsDaylightSavingTime(testDateTime);
             Assert.IsTrue(isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
 
             testDateTime = new DateTime(2024, 2, 15, 14, 31, 0, DateTimeKind.Local);
-            isDaylightSavings = DateUtil.IsDaylightSavingTime(testDateTime); //TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").IsDaylightSavingTime(testDateTime);
+            isDaylightSavings = DateUtil.IsDaylightSavingTime(testDateTime);
             Assert.IsFalse(isDaylightSavings, $"Date '{testDateTime}' ({testDateTime.Kind}), isDaylightSavings = {isDaylightSavings}.");
         }
 
