@@ -95,7 +95,7 @@ namespace cpaplib
         /// </summary>
         public DateTime GetAdjustedTime( DateTime value )
         {
-            if( UseDaylightSavingsTime && TimeZoneInfo.Local.IsDaylightSavingTime( value ) )
+            if( UseDaylightSavingsTime && DateUtil.IsDaylightSavingTime( value ) )
             {
                 value += TimeSpan.FromHours( 1 );
             }            

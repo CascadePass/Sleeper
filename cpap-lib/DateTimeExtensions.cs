@@ -11,7 +11,7 @@ namespace cpaplib
         }
     }
 
-    internal static class DateUtil
+    public static class DateUtil
     {
         [MethodImpl( MethodImplOptions.AggressiveInlining )]
         public static DateTime Min( DateTime a, DateTime b )
@@ -23,6 +23,14 @@ namespace cpaplib
         public static DateTime Max( DateTime a, DateTime b )
         {
             return (a > b) ? a : b;
+        }
+
+        public static bool IsDaylightSavingTime(DateTime dateTime)
+        {
+            //TODO: Use the TZ of the PAP machine
+
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            return timeZoneInfo.IsDaylightSavingTime(dateTime);
         }
     }
 

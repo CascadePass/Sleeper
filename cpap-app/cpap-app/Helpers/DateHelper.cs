@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cpaplib;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace cpap_app.Helpers;
@@ -9,7 +10,7 @@ public static class DateHelper
 
 	public static DateTime AdjustForDaylightSavings( this DateTime dt )
 	{
-		if( TimeZoneInfo.Local.IsDaylightSavingTime( dt ) )
+		if(DateUtil.IsDaylightSavingTime( dt ) )
 		{
 			return dt + TimeSpan.FromHours( 1 );
 		}
@@ -69,8 +70,8 @@ public static class DateHelper
 	{
 		var result = UnixEpoch.AddMilliseconds( milliseconds );
 		
-		var resultIsDST = TimeZoneInfo.Local.IsDaylightSavingTime( result );
-		var nowIsDst    = TimeZoneInfo.Local.IsDaylightSavingTime( DateTime.Today );
+		var resultIsDST = DateUtil.IsDaylightSavingTime( result );
+		var nowIsDst    = DateUtil.IsDaylightSavingTime( DateTime.Today );
 		
 		// Compensate for ToLocalTime() being incorrect for some historical dates
 		return resultIsDST switch
@@ -92,8 +93,8 @@ public static class DateHelper
 	{
 		var result = UnixEpoch.AddMilliseconds( nanoseconds * 1E-6 );
 
-		var resultIsDST = TimeZoneInfo.Local.IsDaylightSavingTime( result );
-		var nowIsDst    = TimeZoneInfo.Local.IsDaylightSavingTime( DateTime.Today );
+		var resultIsDST = DateUtil.IsDaylightSavingTime( result );
+		var nowIsDst    = DateUtil.IsDaylightSavingTime( DateTime.Today );
 		
 		// Compensate for ToLocalTime() being incorrect for some historical dates
 		return resultIsDST switch
