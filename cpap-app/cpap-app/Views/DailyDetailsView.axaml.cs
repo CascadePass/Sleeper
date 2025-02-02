@@ -22,7 +22,9 @@ public partial class DailyDetailsView : UserControl
 	public DailyDetailsView()
 	{
 		InitializeComponent();
-	}
+		
+		DeviceModelNumberLabel.IsVisible = false; //TODO: Hook this up to a setting
+    }
 
 	protected override void OnPropertyChanged( AvaloniaPropertyChangedEventArgs change )
 	{
