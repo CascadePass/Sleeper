@@ -16,10 +16,16 @@
         <StackPanel Name="ViewContents">
             <StackPanel DataContext="{Binding MachineInfo}" Margin="4 8 0 0">
                 <TextBlock Theme="{DynamicResource BodyStrongTextBlockStyle}">
+					<ToolTip.Tip>
+						<TextBlock Theme="{DynamicResource BodyStrongTextBlockStyle}">
+							<Run>Model: </Run>
+							<Run Text="{Binding ModelNumber, Mode=OneWay}" />
+						</TextBlock>
+					</ToolTip.Tip>
                     <Run>Device: </Run>
                     <Run Text="{Binding ProductName, Mode=OneWay}" />
                 </TextBlock>
-                <TextBlock Theme="{DynamicResource BodyStrongTextBlockStyle}">
+                <TextBlock Theme="{DynamicResource BodyStrongTextBlockStyle}" Name="DeviceModelNumberLabel">
                     <Run>Model: </Run>
                     <Run Text="{Binding ModelNumber, Mode=OneWay}" />
                 </TextBlock>
