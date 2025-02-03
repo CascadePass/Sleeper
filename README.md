@@ -25,13 +25,7 @@ Additionally Sleeper stands on the shoulders of giants, and owes a great debt to
 
 # Supported PAP Machines
 
-Sleeper is able to read data from the following ResMed machines:
-
-* AirSense 10
-* AirCurve 10
-* AirSense 11
-
-It's been tested with the following therapy modes:
+Sleeper is able to read data from the ResMed AirSense and AirCurve series 10 and 11 machines, and has been tested with the following therapy modes:
 
 * CPAP
 * APAP
@@ -41,7 +35,7 @@ There has been some (limited) testing with an **AirCurve 10 ASV**.
 
 # What's Next?
 
-After some bugs are fixed, **Sleeper** will gain the ability to use EEG data from a **[Muse S](https://choosemuse.com/pages/muse-s)** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.
+After some bugs are fixed, **Sleeper** will gain the ability to use EEG data from a **[Muse S](https://choosemuse.com/pages/muse-s)** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.  Sleeper's [task list is here](https://github.com/users/CascadePass/projects/2/views/1), [discussions are available here](https://github.com/users/CascadePass/projects/2/views/1) if you would like to suggest an improvement.
 
 # Contributing Code
 
