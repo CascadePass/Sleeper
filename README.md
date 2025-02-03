@@ -29,13 +29,14 @@ Sleeper is able to read data from the ResMed AirSense and AirCurve series 10 and
 
 * CPAP
 * APAP
-* BiLevel aka BiPAP
+* BiLevel S
+* BiLevel V Auto
 
-There has been some (limited) testing with an **AirCurve 10 ASV**.
+There has been some (limited) testing with an **AirCurve 10 ASV**.  Sleeper has code for **AVAPS**, but I don't think it's had any testing.  There is no **S/T** capability.  If anybody out there is using S/T mode, I will add support if you can get me the files on your SD card.
 
 # What's Next?
 
-After some bugs are fixed, **Sleeper** will gain the ability to use EEG data from a **[Muse S](https://choosemuse.com/pages/muse-s)** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.  Sleeper's [task list is here](https://github.com/users/CascadePass/projects/2/views/1), [discussions are available here](https://github.com/users/CascadePass/projects/2/views/1) if you would like to suggest an improvement.
+After some bugs are fixed, **Sleeper** will gain the ability to use EEG data from a **[Muse S](https://choosemuse.com/pages/muse-s)** headband device to distinguish between true central apneas vs "clear airway" events, and to score REM/non-REM breathing.  You can see Sleeper's [task list](https://github.com/users/CascadePass/projects/2/views/1), and [discussions](https://github.com/CascadePass/Sleeper/discussions) if you would like to suggest an improvement.  Finally, you can see [progress toward upcoming releases](https://github.com/CascadePass/Sleeper/milestones?with_issues=no).
 
 # Contributing Code
 
