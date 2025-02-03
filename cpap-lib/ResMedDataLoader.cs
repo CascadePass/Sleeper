@@ -42,6 +42,8 @@ namespace cpaplib
             { "39000", "ResMed AirSense 11 AutoSet" },
         };
 
+        #region SD Card Detection
+
         private static string[] expectedFiles = new[]
         {
             "STR.edf",
@@ -58,6 +60,8 @@ namespace cpaplib
             { "Identification.tgt", 10 },
             { "Identification.json", 11 },
         };
+
+        #endregion
 
         private static Dictionary<int, OperatingMode> s_modeMapping = new Dictionary<int, OperatingMode>()
         {
@@ -95,7 +99,7 @@ namespace cpaplib
                 {
                     if (throwIfNot)
                     {
-                        throw new DirectoryNotFoundException($"Directory {directoryPath} does not exist");
+                        throw new FileNotFoundException($"Directory {directoryPath} does not exist");
                     }
 
                     return false;
@@ -131,6 +135,11 @@ namespace cpaplib
             }
 
             return true;
+        }
+
+        public void EnsureCorrectFolderStructure(string rootFolder)
+        {
+            this.HasCorrectFolderStructure(rootFolder, true);
         }
 
         #region Get Machine Identification
@@ -188,7 +197,7 @@ namespace cpaplib
             return null;
         }
 
-        #region Parsle ID File
+        #region Parse ID File
 
         public MachineIdentification GetMachineIdentificationFromJson(string json)
         {
@@ -306,11 +315,6 @@ namespace cpaplib
 		#endregion
 
 		#region Private functions
-
-        private void EnsureCorrectFolderStructure( string rootFolder )
-        {
-            this.HasCorrectFolderStructure(rootFolder, true);
-        }
 
         private void ImportSessionsAndEvents( string rootFolder, DailyReport day )
         {
@@ -997,7 +1001,7 @@ namespace cpaplib
             }
         }
 
-        private static MachineSettings ReadMachineSettings( Dictionary<string, double> data )
+        public static MachineSettings ReadMachineSettings( Dictionary<string, double> data )
         {
             var settings = new MachineSettings();
 

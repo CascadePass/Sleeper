@@ -270,6 +270,135 @@ namespace cpaplib_tests
 
         #endregion
 
+        #region ReadMachineSettings
+
+        [TestMethod]
+        public void ReadMachineSettings_APAP_MinMaxPressure()
+        {
+            var data = new Dictionary<string, double>
+            {
+                { "CPAP_MODE", 1 },
+                { "S.A.MinPress", 5.0 },
+                { "S.A.MaxPress", 15.0 },
+                { "S.C.Press", 10.0 },
+                { "S.RampEnable", 1.0 },
+                { "S.C.StartPress", 4.0 },
+                { "S.RampTime", 20.0 },
+                { "S.SmartStart", 1.0 },
+                { "S.ABFilter", 1.0 },
+                { "HeatedTube", 1.0 },
+                { "Humidifier", 1.0 },
+                { "S.ClimateControl", 1.0 },
+                { "S.HumEnable", 1.0 },
+                { "S.HumLevel", 3.0 },
+                { "S.TempEnable", 1.0 },
+                { "S.Temp", 25.0 },
+                { "S.Mask", 1.0 },
+                { "S.PtAccess", 1.0 },
+            };
+
+            var settings = ResMedDataLoader.ReadMachineSettings(data);
+
+            Assert.AreEqual(OperatingMode.Apap, settings[SettingNames.Mode]);
+            Assert.AreEqual(5.0, settings[SettingNames.MinPressure]);
+            Assert.AreEqual(15.0, settings[SettingNames.MaxPressure]);
+        }
+
+        [TestMethod]
+        public void ReadMachineSettings_UnsupportedMode_ThrowsNotSupportedException()
+        {
+            var data = new Dictionary<string, double>
+            {
+                { "S.C.Press", 10.0 },
+                { "S.RampEnable", 1.0 },
+                { "S.C.StartPress", 4.0 },
+                { "S.RampTime", 20.0 },
+                { "S.SmartStart", 1.0 },
+                { "S.ABFilter", 1.0 },
+                { "HeatedTube", 1.0 },
+                { "Humidifier", 1.0 },
+                { "S.ClimateControl", 1.0 },
+                { "S.HumEnable", 1.0 },
+                { "S.HumLevel", 3.0 },
+                { "S.TempEnable", 1.0 },
+                { "S.Temp", 25.0 },
+                { "S.Mask", 1.0 },
+                { "S.PtAccess", 1.0 }
+            };
+
+            Assert.ThrowsException<NotSupportedException>(() => ResMedDataLoader.ReadMachineSettings(data));
+        }
+
+        [TestMethod]
+        public void ReadMachineSettings_EprEnabled_SetsEprSettings()
+        {
+            var data = new Dictionary<string, double>
+            {
+                { "CPAP_MODE", 1 },
+                { "S.EPR.EPREnable", 1.0 },
+                { "S.EPR.Level", 2.0 },
+                { "S.EPR.EPRType", 1.0 },
+                { "S.C.Press", 10.0 },
+                { "S.RampEnable", 1.0 },
+                { "S.C.StartPress", 4.0 },
+                { "S.RampTime", 20.0 },
+                { "S.SmartStart", 1.0 },
+                { "S.ABFilter", 1.0 },
+                { "HeatedTube", 1.0 },
+                { "Humidifier", 1.0 },
+                { "S.ClimateControl", 1.0 },
+                { "S.HumEnable", 1.0 },
+                { "S.HumLevel", 3.0 },
+                { "S.TempEnable", 1.0 },
+                { "S.Temp", 25.0 },
+                { "S.Mask", 1.0 },
+                { "S.PtAccess", 1.0 },
+                { "S.A.MinPress", 5.0 },
+                { "S.A.MaxPress", 15.0 },
+            };
+
+            var settings = ResMedDataLoader.ReadMachineSettings(data);
+
+            Assert.IsTrue(settings.GetValue<bool>(SettingNames.EprEnabled));
+            Assert.AreEqual(2, settings[SettingNames.EprLevel]);
+            Assert.AreEqual((EprType)2, settings[SettingNames.EprMode]);
+        }
+
+        #endregion
+
+        #region HasCorrectFolderStructure
+
+        [TestMethod]
+        public void HasCorrectFolderStructure_Root()
+        {
+            ResMedDataLoader resMedDataLoader = new();
+            string testFolder = "C:\\";
+
+            Assert.IsFalse(resMedDataLoader.HasCorrectFolderStructure(testFolder));
+        }
+
+        [TestMethod]
+        public void HasCorrectFolderStructure_Root_ThrowIfNot()
+        {
+            ResMedDataLoader resMedDataLoader = new();
+            string testFolder = "C:\\";
+
+            Assert.ThrowsException<FileNotFoundException>(() => resMedDataLoader.HasCorrectFolderStructure(testFolder, true));
+
+        }
+
+        [TestMethod]
+        public void EnsureCorrectFolderStructure_Root()
+        {
+            ResMedDataLoader resMedDataLoader = new();
+            string testFolder = "C:\\";
+
+            Assert.ThrowsException<FileNotFoundException>(() => resMedDataLoader.HasCorrectFolderStructure(testFolder, true));
+
+        }
+
+        #endregion
+
         private Dictionary<string, double> GetSampleData_AS11()
         {
             Dictionary<string, double> data = new()

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 
 namespace cpaplib
 {
-	internal class ButterworthFilter
+    /// <summary>
+    /// A signal processing filter being used for breath detection.
+    /// </summary>
+    /// <seealso cref="https://en.wikipedia.org/wiki/Butterworth_filter"/>
+    internal class ButterworthFilter
 	{
 		public static void FilterInPlace( List<double> sourceData, double sourceFrequency, double cutOff )
 		{
