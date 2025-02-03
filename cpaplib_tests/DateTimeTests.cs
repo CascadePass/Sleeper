@@ -1,5 +1,6 @@
 ﻿using cpap_app.Helpers;
 using cpaplib;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,6 +36,24 @@ namespace cpaplib_tests
             Assert.AreEqual(endTime, compareEndTime);
 
             Debug.WriteLine($"Start: {startTime},    End: {endTime},    Duration: {endTime - startTime}");
+        }
+
+        [TestMethod]
+        public void DateUtil_Max()
+        {
+            DateTime first = new(1977, 12, 21), last = new(2025, 2, 2);
+            var result = DateUtil.Max(first, last);
+
+            Assert.AreEqual(last, result);
+        }
+
+        [TestMethod]
+        public void DateUtil_Min()
+        {
+            DateTime first = new(1977, 12, 21), last = new(2025, 2, 2);
+            var result = DateUtil.Min(first, last);
+
+            Assert.AreEqual(first, result);
         }
     }
 }
