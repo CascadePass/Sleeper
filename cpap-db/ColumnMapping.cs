@@ -77,7 +77,7 @@ public class ColumnMapping
 	public IBlobTypeConverter Converter { get; set; }
 
 	private PropertyInfo _property;
-	private System.Type  _propertyType
+	private System.Type _propertyType;
 	private static CultureInfo _operatingCulture;
 
     public ColumnMapping( string columnName, string propertyName, Type owningType )
