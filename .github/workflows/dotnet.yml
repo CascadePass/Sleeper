@@ -32,7 +32,7 @@ jobs:
         dotnet publish --configuration Release --output ./publish
 
     - name: Upload Package
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: winui3-app
         path: ./publish
