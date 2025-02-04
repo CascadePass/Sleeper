@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Reflection;
 
 using cpap_db.Converters;
@@ -76,9 +77,10 @@ public class ColumnMapping
 	public IBlobTypeConverter Converter { get; set; }
 
 	private PropertyInfo _property;
-	private System.Type  _propertyType;
+	private System.Type  _propertyType
+	private static CultureInfo _operatingCulture;
 
-	public ColumnMapping( string columnName, string propertyName, Type owningType )
+    public ColumnMapping( string columnName, string propertyName, Type owningType )
 		: this( columnName, owningType.GetProperty( propertyName, BindingFlags.Instance | BindingFlags.Public ) )
 	{
 		IsNullable = _property.PropertyType.IsClass;
@@ -128,30 +130,51 @@ public class ColumnMapping
 	}
 	
 	internal string GetDefaultValue( object defaultObject )
-	{
-		var defaultValue = GetValue( defaultObject );
-		
-		if( Type == typeof( string ) )
-		{
-			return $"'{defaultValue}'";
-		}
-		
-		if( Type == typeof( bool ) )
-		{
-			return (bool)defaultValue ? "1" : "0";
-		}
+    {
+        var defaultValue = GetValue(defaultObject);
 
-		if( Type.IsEnum )
-		{
-			return $"{(int)defaultValue}";
-		}
+        if (Type == typeof(string))
+        {
+            return $"'{defaultValue}'";
+        }
 
-		if( Type == typeof( DateTime ) || Type == typeof( TimeSpan ) || Type == typeof( DateTimeOffset ) )
-		{
-			return "0";
-		}
+        if (Type == typeof(bool))
+        {
+            return (bool)defaultValue ? "1" : "0";
+        }
 
-		return $"{defaultValue}";
-	}
+        if (Type.IsEnum)
+        {
+            return $"{(int)defaultValue}";
+        }
+
+        if (Type == typeof(DateTime) || Type == typeof(TimeSpan) || Type == typeof(DateTimeOffset))
+        {
+            return "0";
+        }
+
+		ColumnMapping.SetCulture();
+
+        return $"{defaultValue}";
+    }
+
+    /// <summary>
+    /// Sets the culture to use dot as a decimal separator, if it is not already set.
+    /// </summary>
+	/// <remarks>
+	/// See https://github.com/CascadePass/Sleeper/issues/41 for details.
+	/// </remarks>
+    private static void SetCulture()
+    {
+        if (CultureInfo.CurrentCulture?.NumberFormat?.NumberDecimalSeparator != "." && ColumnMapping._operatingCulture == null)
+        {
+            var currentCulture = CultureInfo.CreateSpecificCulture(CultureInfo.CurrentCulture.Name);
+            currentCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            ColumnMapping._operatingCulture = currentCulture;
+            Thread.CurrentThread.CurrentCulture = ColumnMapping._operatingCulture;
+            CultureInfo.DefaultThreadCurrentCulture = ColumnMapping._operatingCulture;
+        }
+    }
 }
 
