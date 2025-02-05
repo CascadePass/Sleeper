@@ -29,11 +29,10 @@ jobs:
       
     - name: Package App
       run: |
-        dotnet publish --framework net9.0 --configuration Release --output ./publish
+        dotnet publish --framework net9.0 --configuration Release
 
     - name: Upload Package
       uses: actions/upload-artifact@v4
       with:
         name: winui3-app
-        path: ./publish
         retention-days: 1
