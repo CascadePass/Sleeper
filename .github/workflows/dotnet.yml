@@ -27,6 +27,9 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
+    - name: Package App
+      run: dotnet publish --framework net9.0 --configuration Release --output ./publish
+      
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
