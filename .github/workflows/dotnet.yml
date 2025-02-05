@@ -32,3 +32,4 @@ jobs:
       with:
         name: build-artifacts
         path: ./publish
+        retention-days: 1
