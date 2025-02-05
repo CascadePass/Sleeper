@@ -1,6 +1,3 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET
 
 on:
@@ -15,30 +12,35 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Clean Build Directory
       run: dotnet clean
-  
-    - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --no-restore
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
     - name: Clean Up Temporary Files
-      run: rm -rf ./obj ./bin
-      
+      run: rm -rf ./obj ./bin ./publish
+
     - name: Package App
-      run: |
-          dotnet publish --framework net9.0 --configuration Release --no-build
+      run: dotnet publish --framework net9.0 --configuration Release --no-build
 
     - name: Upload Package
       uses: actions/upload-artifact@v4
       with:
         name: winui3-app
+        path: ./publish
         retention-days: 1
