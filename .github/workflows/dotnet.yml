@@ -33,7 +33,13 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Clean Up Temporary Files
-      run: rm ./obj ./bin ./publish
+      run: rm ./obj
+
+    - name: Clean Up Temporary Files
+      run: rm ./bin
+
+    - name: Clean Up Temporary Files
+      run: rm ./publish
 
     - name: Package App
       run: dotnet publish --framework net9.0 --configuration Release
