@@ -32,12 +32,6 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    - name: Clean Up Temporary Files
-      run: rm ./bin
-
-    - name: Clean Up Temporary Files
-      run: rm ./publish
-
     - name: Clean Build Directory
       run: dotnet clean
 
