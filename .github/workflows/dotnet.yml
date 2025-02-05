@@ -36,7 +36,12 @@ jobs:
       run: dotnet clean
 
     - name: Package App
-      run: dotnet publish --framework net9.0 --configuration Release --no-restore
+      run: |
+          sleep 5
+          dotnet publish --framework net9.0 --configuration Release --no-build
+      retry:
+        max_attempts: 3
+        delay: 5s
 
     - name: Upload Package
       uses: actions/upload-artifact@v4
