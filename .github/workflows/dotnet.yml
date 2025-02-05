@@ -29,7 +29,7 @@ jobs:
       
     - name: Package App
       run: |
-        dotnet publish net9.0 --configuration Release --output ./publish
+        dotnet publish --framework net9.0 --configuration Release --output ./publish
 
     - name: Upload Package
       uses: actions/upload-artifact@v4
