@@ -15,6 +15,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Clean Build Directory
+      run: dotnet clean
+  
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -26,6 +29,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    - name: Clean Up Temporary Files
+      run: rm -rf ./obj ./bin
       
     - name: Package App
       run: |
