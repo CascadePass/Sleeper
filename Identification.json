@@ -1,0 +1,27 @@
+{
+  "FlowGenerator": {
+    "IdentificationProfiles": {
+      "Product": {
+        "UniversalIdentifier": "aac1e42a-9c69-48d3-918c-517bb1fc7f3d",
+        "SerialNumber": "23241877024",
+        "SerialNumberVerificationCode": "",
+        "ProductCode": "39517",
+        "ProductName": "AirSense 11 AutoSet",
+        "FdaUniqueDeviceIdentifier": "",
+        "ProductGeographicIdentifier": "USA"
+      },
+      "Hardware": { "HardwareIdentifier": "(90)R390-7654(91)1S003(21)3241R04978" },
+      "Software": {
+        "BootloaderIdentifier": "SW04601.00.1.1.0.736edbdfd",
+        "ApplicationIdentifier": "SW04600.11.8.0.0.a65babae1",
+        "ConfigurationIdentifier": "CF04600.11.03.00.a65babae1",
+        "PlatformIdentifier": 46,
+        "VariantIdentifier": 3,
+        "RegionIdentifier": 0,
+        "ProfileVariationIdentifier": "00000000-0000-3000-8000-000011046003",
+        "DataVersionIdentifier": 11,
+        "DataModelVersionIdentifier": "2.3.0.46f0081fc"
+      }
+    }
+  }
+}
