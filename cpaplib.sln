@@ -13,6 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cpap-app", "cpap-app\cpap-a
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cpap-app.Desktop", "cpap-app\cpap-app.Desktop\cpap-app.Desktop.csproj", "{DBF196E9-B90C-4432-BF3B-7CF448CB9C43}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleData", "ExampleData", "{18B2E2DA-C368-4863-AE02-64E4348B68CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentificationFile", "IdentificationFile", "{17CB9303-5055-4FAA-BEF5-F0D2A55FF797}"
+	ProjectSection(SolutionItems) = preProject
+		Identification.json = Identification.json
+		Identification.tgt = Identification.tgt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,38 +135,11 @@ Global
 		{DBF196E9-B90C-4432-BF3B-7CF448CB9C43}.Release|x64.Build.0 = Release|Any CPU
 		{DBF196E9-B90C-4432-BF3B-7CF448CB9C43}.Release|x86.ActiveCfg = Release|Any CPU
 		{DBF196E9-B90C-4432-BF3B-7CF448CB9C43}.Release|x86.Build.0 = Release|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM.ActiveCfg = Debug|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM.Build.0 = Debug|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM.Deploy.0 = Debug|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM64.Build.0 = Debug|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x64.ActiveCfg = Debug|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x64.Build.0 = Debug|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x64.Deploy.0 = Debug|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x86.ActiveCfg = Debug|x86
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x86.Build.0 = Debug|x86
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Debug|x86.Deploy.0 = Debug|x86
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM.ActiveCfg = Release|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM.Build.0 = Release|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM.Deploy.0 = Release|ARM
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM64.ActiveCfg = Release|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM64.Build.0 = Release|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|ARM64.Deploy.0 = Release|ARM64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x64.ActiveCfg = Release|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x64.Build.0 = Release|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x64.Deploy.0 = Release|x64
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x86.ActiveCfg = Release|x86
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x86.Build.0 = Release|x86
-		{D02D3747-9986-42D2-AC6C-066F1CE45D37}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{17CB9303-5055-4FAA-BEF5-F0D2A55FF797} = {18B2E2DA-C368-4863-AE02-64E4348B68CC}
 	EndGlobalSection
 EndGlobal
