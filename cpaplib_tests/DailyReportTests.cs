@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -200,6 +201,194 @@ namespace cpaplib_tests
             // Validate that RecordingStartTime and RecordingEndTime were updated
             Assert.AreEqual(report.Sessions[0].StartTime, report.RecordingStartTime);
             Assert.AreEqual(report.Sessions[1].EndTime, report.RecordingEndTime);
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void CalculateSleepEfficiency()
+        {
+            DailyReport report = new();
+            double efficiency;
+
+            #region No sessions = no exception
+
+            efficiency = report.CalculateSleepEfficiency();
+
+            // There's no data, so the answer should be zero.
+            Assert.AreEqual(default, efficiency);
+
+            #endregion
+
+            #region Single session
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 6, 22, 0, 0),
+                EndTime = new(2025, 2, 7, 6, 30, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            efficiency = report.CalculateSleepEfficiency();
+
+            // There is only one session.  A CPAP or BiPAP machine doesn't know when its user
+            // is asleep or awake.  It only knows when it's on or off.  So, the efficiency
+            // is always 1.0.  Values below 100% reflect time spent away from the sleep machine.
+            // Scenarios are: user got up to use the rest room, took off the mask, etc.  These
+            // are not considered sleep time.
+
+            Assert.AreEqual(1, efficiency);
+
+            #endregion
+
+            #region Multiple sessions
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 7, 6, 35, 0),
+                EndTime = new(2025, 2, 7, 8, 0, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            efficiency = report.CalculateSleepEfficiency();
+
+            // A five minute break in the middle of the night is not a big deal,
+            // as the number below reflects.  This is what the math works out to.
+            Assert.AreEqual(.9915966386554622, efficiency);
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void CalculateTotalSleepTime()
+        {
+            DailyReport report = new();
+            TimeSpan totalSleepTime;
+
+            #region No sessions = no exception
+
+            totalSleepTime = report.CalculateTotalSleepTime();
+
+            // There's no data, so the answer should be zero.
+            Assert.AreEqual(default, totalSleepTime);
+
+            #endregion
+
+            #region Single session
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 6, 22, 0, 0),
+                EndTime = new(2025, 2, 7, 6, 30, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            totalSleepTime = report.CalculateTotalSleepTime();
+
+            // There is only one session.  A CPAP or BiPAP machine doesn't know when its user
+            // is asleep or awake.  It only knows when it's on or off.  So, the efficiency
+            // is always 1.0.  Values below 100% reflect time spent away from the sleep machine.
+            // Scenarios are: user got up to use the rest room, took off the mask, etc.  These
+            // are not considered sleep time.
+
+            Assert.AreEqual(8, totalSleepTime.Hours);
+            Assert.AreEqual(30, totalSleepTime.Minutes);
+
+            #endregion
+
+            #region Multiple sessions
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 7, 6, 35, 0),
+                EndTime = new(2025, 2, 7, 8, 0, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            totalSleepTime = report.CalculateTotalSleepTime();
+
+            Assert.AreEqual(9, totalSleepTime.Hours);
+            Assert.AreEqual(55, totalSleepTime.Minutes);
+
+            #endregion
+
+            #region Other session types do not count
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 7, 6, 35, 0),
+                EndTime = new(2025, 2, 7, 9, 0, 0),
+                SourceType = SourceType.PulseOximetry,
+            });
+
+            totalSleepTime = report.CalculateTotalSleepTime();
+
+            Assert.AreEqual(9, totalSleepTime.Hours);
+            Assert.AreEqual(55, totalSleepTime.Minutes);
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void MyTestMethod()
+        {
+            DailyReport report = new();
+
+            // Use reflection to get the private RemoveSession method
+            var methodInfo = typeof(DailyReport).GetMethod("RemoveSession", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // Assert that it worked
+            Assert.IsNotNull(methodInfo);
+
+            #region Single session
+
+            Session testSession = new()
+            {
+                StartTime = new(2025, 2, 6, 22, 0, 0),
+                EndTime = new(2025, 2, 7, 6, 30, 0),
+                SourceType = SourceType.CPAP,
+            };
+
+            report.AddSession(testSession);
+
+            // Use reflection to call the protected RemoveSession method
+            var result = (bool)methodInfo.Invoke(report, [testSession]);
+
+            Assert.IsTrue(result);
+
+            #endregion
+
+            #region No sessions
+
+            // Use reflection to call the protected RemoveSession method
+            result = (bool)methodInfo.Invoke(report, [testSession]);
+
+            Assert.IsFalse(result);
+
+            #endregion
+
+            #region Multiple sessions
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 7, 5, 0, 0),
+                EndTime = new(2025, 2, 7, 6, 0, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            report.AddSession(testSession);
+
+            report.AddSession(new()
+            {
+                StartTime = new(2025, 2, 7, 6, 5, 0),
+                EndTime = new(2025, 2, 7, 7, 0, 0),
+                SourceType = SourceType.CPAP,
+            });
+
+            // Use reflection to call the protected RemoveSession method
+            result = (bool)methodInfo.Invoke(report, [testSession]);
+
+            Assert.IsTrue(result);
 
             #endregion
         }
