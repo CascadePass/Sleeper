@@ -171,10 +171,24 @@ namespace cpaplib
 		/// </summary>
 		public void RefreshTimeRange()
 		{
-			RecordingStartTime = Sessions.Min( x => x.StartTime );
-			RecordingEndTime   = Sessions.Max( x => x.EndTime );
-			TotalSleepTime     = CalculateTotalSleepTime();
-		}
+			if (Sessions.Count != 0)
+			{
+				RecordingStartTime = Sessions.Min(x => x.StartTime);
+				RecordingEndTime = Sessions.Max(x => x.EndTime);
+				TotalSleepTime = CalculateTotalSleepTime();
+			}
+			else
+			{
+                // If there are no sessions, reset the time range values to their defaults.
+
+                // It's a bug to call this function when there are no sessions, but we'll handle it gracefully.
+                // Without this check, an exception would be thrown.
+
+                RecordingStartTime = default;
+                RecordingEndTime = default;
+                TotalSleepTime = default;
+            }
+        }
 
 		/// <summary>
 		/// Adds a new Session to the Sessions list and updates the RecordingStartTime and RecordingEndTime
